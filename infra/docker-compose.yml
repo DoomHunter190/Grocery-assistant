@@ -1,12 +1,32 @@
-version: '3.3'
+version: '3.8'
 services:
+  db:
+    image: postgres:13.10
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+
+  backend:
+    image: doomhunter190/foodgram_backend
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - .env
+    restart: always
+    container_name: foodgram_backend
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: doomhunter190/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
+    depends_on:
+      - db
+    container_name: foodgram_frontend
+
   nginx:
     image: nginx:1.19.3
     ports:

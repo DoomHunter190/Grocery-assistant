@@ -7,15 +7,15 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure--2vcsyw5x5ud^-c%8s8$!8@=&@lv^de0x=_dlb_^%6g($mz5ja'# os.getenv('TOKEN', 'default-value')  
+SECRET_KEY = 'django-insecure--2vcsyw5x5ud^-c%8s8$!8@=&@lv^de0x=_dlb_^%6g($mz5ja' # os.getenv('TOKEN', 'default-value') 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG = os.getenv('DEBUG', default=False)
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
 
 AUTH_USER_MODEL = 'users.User'
-# Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
