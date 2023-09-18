@@ -8,7 +8,7 @@ services:
       - .env
 
   backend:
-    image: doomhunter190/foodgram_backend
+    image: doomhunter190/foodgramm_backend
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -20,7 +20,7 @@ services:
     container_name: foodgram_backend
 
   frontend:
-    image: doomhunter190/foodgram_frontend
+    image: doomhunter190/foodgramm_frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
