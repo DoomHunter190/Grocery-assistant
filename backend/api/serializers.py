@@ -11,7 +11,7 @@ from users.models import User
 
 
 class UserSerializer(UserSerializer):
-    """ Сериализатор пользователя """
+    """ Сериализатор пользователя. """
     is_subscribed = SerializerMethodField(read_only=True)
 
     class Meta:
@@ -27,7 +27,7 @@ class UserSerializer(UserSerializer):
 
 
 class UserCreateSerializer(UserCreateSerializer):
-    """ Сериализатор создания пользователя """
+    """ Сериализатор создания пользователя. """
 
     class Meta:
         model = User
@@ -37,7 +37,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
 
 class SubscribeListSerializer(UserSerializer):
-    """ Сериализатор для получения подписок """
+    """ Сериализатор для получения подписок. """
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 
@@ -76,7 +76,7 @@ class SubscribeListSerializer(UserSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """ Сериализатор просмотра тегов """
+    """ Сериализатор просмотра тегов. """
 
     class Meta:
         model = Tag
@@ -84,7 +84,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """ Сериализатор просмотра ингридиентов """
+    """ Сериализатор просмотра ингридиентов. """
 
     class Meta:
         model = Ingredient
@@ -92,7 +92,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
-    """ Сериализатор связи ингридиентов и рецепта """
+    """ Сериализатор связи ингридиентов и рецепта. """
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
@@ -107,7 +107,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
-    """ Сериализатор просмотра рецепта """
+    """ Сериализатор просмотра рецепта. """
     tags = TagSerializer(read_only=False, many=True)
     author = UserSerializer(read_only=True, many=False)
     ingredients = IngredientRecipeSerializer(
@@ -142,7 +142,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    """ Сериализатор для создания рецепта """
+    """ Сериализатор для создания рецепта. """
     ingredients = IngredientRecipeSerializer(
         many=True,
     )
@@ -226,7 +226,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
-    """ Сериализатор полей избранных рецептов и покупок """
+    """ Сериализатор полей избранных рецептов и покупок. """
 
     class Meta:
         model = Recipe
@@ -234,7 +234,7 @@ class RecipeShortSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    """  Сериализатор избранных рецептов """
+    """  Сериализатор избранных рецептов. """
 
     class Meta:
         model = Favorite
@@ -256,7 +256,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """Сериализатор для списка покупок """
+    """Сериализатор для списка покупок. """
 
     class Meta:
         model = ShoppingCart

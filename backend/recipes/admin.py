@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                     ShoppingCart, Tag)
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 
 
 class IngredientInline(admin.TabularInline):
@@ -12,6 +12,7 @@ class IngredientInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
+    """ Админ панель управление рецептов. """
     list_display = ('author', 'name', 'cooking_time',
                     'get_favorites', 'get_ingredients',)
     search_fields = ('name', 'author', 'tags')
@@ -31,7 +32,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    """ Админ панель управление ингридиентами """
+    """ Админ панель управление ингридиентами. """
     list_display = ('name', 'measurement_unit')
     search_fields = ('name', )
     list_filter = ('name', )
@@ -39,7 +40,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    """ Админ панель управление тегами """
+    """ Админ панель управление тегами. """
     list_display = ('name', 'color', 'slug')
     search_fields = ('name', 'slug')
     list_filter = ('name', )
@@ -47,7 +48,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    """ Админ панель управление подписками """
+    """ Админ панель управление подписками. """
     list_display = ('user', 'recipe')
     list_filter = ('user', 'recipe')
     search_fields = ('user', 'recipe')
@@ -55,7 +56,7 @@ class FavoriteAdmin(admin.ModelAdmin):
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-    """ Админ панель списка покупок """
+    """ Админ панель корзины. """
     list_display = ('recipe', 'user')
     list_filter = ('recipe', 'user')
     search_fields = ('user', )

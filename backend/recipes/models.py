@@ -10,6 +10,7 @@ from users.models import User
 
 class Ingredient(models.Model):
     """ Модель ингридиентов. """
+
     name = models.CharField(
         max_length=settings.LENGTH_OF_FIELDS_RECIPES,
         verbose_name='Название ингридиента',
@@ -36,6 +37,7 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """ Модель тегов."""
+
     name = models.CharField(
         verbose_name='Название тега',
         max_length=settings.LENGTH_OF_FIELDS_RECIPES,
@@ -71,6 +73,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     """ Модель рецептов. """
+
     author = models.ForeignKey(
         User,
         verbose_name='Автор рецепта',
@@ -118,7 +121,7 @@ class Recipe(models.Model):
 
 
 class FavoriteShoppingCart(models.Model):
-    """ Связывающая модель списка покупок и избранного. """
+    """ Вспомогательная модель, списка покупок и избранного. """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -154,7 +157,7 @@ class Favorite(FavoriteShoppingCart):
 
 
 class ShoppingCart(FavoriteShoppingCart):
-    """ Модель списка покупок. """
+    """ Модель корзины. """
 
     class Meta(FavoriteShoppingCart.Meta):
         default_related_name = 'shopping_list'
@@ -163,7 +166,8 @@ class ShoppingCart(FavoriteShoppingCart):
 
 
 class IngredientRecipe(models.Model):
-    """ Ингридиенты рецепта. """
+    """Модель мнгридиенты рецепта. """
+
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,

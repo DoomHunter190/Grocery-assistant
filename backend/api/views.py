@@ -13,17 +13,17 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from users.models import Follow, User
 
-from .filters import IngredientFilter, RecipeFilter
-from .pagination import CustomPagination
-from .permissions import AuthorPermission
-from .serializers import (CreateRecipeSerializer, FavoriteSerializer,
-                          IngredientSerializer, RecipeReadSerializer,
-                          ShoppingCartSerializer, SubscribeListSerializer,
-                          TagSerializer, UserSerializer)
+from api.filters import IngredientFilter, RecipeFilter
+from api.pagination import CustomPagination
+from api.permissions import AuthorPermission
+from api.serializers import (CreateRecipeSerializer, FavoriteSerializer,
+                             IngredientSerializer, RecipeReadSerializer,
+                             ShoppingCartSerializer, SubscribeListSerializer,
+                             TagSerializer, UserSerializer)
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """ Вывод ингредиентов """
+    """ Вьюсет ингредиентов. """
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly, )
@@ -33,7 +33,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    """ Вывод тегов """
+    """ Вьюсет тегов. """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
@@ -41,7 +41,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """ Вывод работы с рецептами """
+    """ Вьюсет рецептов. """
     queryset = Recipe.objects.all()
     serializer_class = CreateRecipeSerializer
     permission_classes = (AuthorPermission, )
@@ -128,6 +128,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(UserViewSet):
+    """ Вьюсет пользователя. """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
