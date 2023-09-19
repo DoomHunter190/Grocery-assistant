@@ -86,7 +86,7 @@ jobs:
             sudo docker compose down
             sudo docker pull doomhunter190/foodgramm_frontend:latest
             sudo docker pull doomhunter190/foodgramm_backend:latest
-            sudo docker compose up 
+            sudo docker compose up -d
 
   send_message:
     runs-on: ubuntu-latest
