@@ -213,3 +213,6 @@ Response:
   "cooking_time": 1
 }
 ```
+Author of the project | My mail
+------------- | -------------
+[Doomhunter190](https://github.com/DoomHunter190) | <small>[maximportnov9999@gmail.com](maximportnov9999@gmail.com)
