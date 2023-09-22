@@ -81,24 +81,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=('POST',),
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
-        context = {'request': request}
-        recipe = get_object_or_404(Recipe, id=pk)
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
-        serializer = ShoppingCartSerializer(data=data, context=context)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        self._add_to_list(request, pk, ShoppingCartSerializer)
+        return Response(status=status.HTTP_201_CREATED)
 
     @shopping_cart.mapping.delete
     def destroy_shopping_cart(self, request, pk):
-        get_object_or_404(
-            ShoppingCart,
-            user=request.user.id,
-            recipe=get_object_or_404(Recipe, id=pk)
-        ).delete()
+        self._remove_from_list(request, pk, ShoppingCart)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
@@ -106,25 +94,31 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=('POST',),
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
-        context = {"request": request}
+        self._add_to_list(request, pk, FavoriteSerializer)
+        return Response(status=status.HTTP_201_CREATED)
+
+    @favorite.mapping.delete
+    def destroy_favorite(self, request, pk):
+        self._remove_from_list(request, pk, Favorite)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def _add_to_list(self, request, pk, serializer_class):
+        context = {'request': request}
         recipe = get_object_or_404(Recipe, id=pk)
         data = {
             'user': request.user.id,
             'recipe': recipe.id
         }
-        serializer = FavoriteSerializer(data=data, context=context)
+        serializer = serializer_class(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @favorite.mapping.delete
-    def destroy_favorite(self, request, pk):
+    def _remove_from_list(self, request, pk, model_class):
         get_object_or_404(
-            Favorite,
+            model_class,
             user=request.user,
             recipe=get_object_or_404(Recipe, id=pk)
         ).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserViewSet(UserViewSet):
