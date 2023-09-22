@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
@@ -24,16 +24,6 @@ class UserSerializer(UserSerializer):
         if self.context.get('request').user.is_anonymous:
             return False
         return obj.following.filter(user=request.user).exists()
-
-
-class UserCreateSerializer(UserCreateSerializer):
-    """ Сериализатор создания пользователя. """
-
-    class Meta:
-        model = User
-        fields = (
-            'email', 'username', 'first_name',
-            'last_name', 'password')
 
 
 class SubscribeListSerializer(UserSerializer):
