@@ -166,7 +166,7 @@ class ShoppingCart(FavoriteShoppingCart):
 
 
 class IngredientRecipe(models.Model):
-    """Модель мнгридиенты рецепта. """
+    """Модель ингредиентов рецепта. """
 
     ingredient = models.ForeignKey(
         Ingredient,
