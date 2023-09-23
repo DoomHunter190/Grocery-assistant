@@ -1,4 +1,4 @@
-from django.db.models import PositiveSmallIntegerField, Sum
+from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -61,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             shopping_list += (
                 f"\n{ingredient['ingredient__name']} "
                 f"({ingredient['ingredient__measurement_unit']}) - "
-                f"{ingredient['total_amount']}")
+                f"{ingredient['ingredient_value']}")
         file = 'shopping_list.txt'
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
@@ -73,8 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(total_amount=Sum('total_amount'),
-                   output_field=PositiveSmallIntegerField())
+        ).annotate(ingredient_value=Sum('amount'))
         return self.send_message(ingredients)
 
     @action(
