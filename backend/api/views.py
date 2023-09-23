@@ -1,4 +1,4 @@
-from django.db.models import PositiveSmallIntegerField, Sum
+from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -73,8 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(total_amount=Sum('amount',
-                                    output_field=PositiveSmallIntegerField()))
+        ).annotate(amount=Sum('amount'))
         return self.send_message(ingredients)
 
     @action(
