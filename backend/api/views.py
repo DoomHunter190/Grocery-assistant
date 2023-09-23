@@ -73,7 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(total_amount=Sum('amount'),
+        ).annotate(total_amount=Sum('total_amount'),
                    output_field=PositiveSmallIntegerField())
         return self.send_message(ingredients)
 
