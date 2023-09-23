@@ -184,11 +184,6 @@ class IngredientRecipe(models.Model):
         verbose_name='Количество ингредиента'
     )
 
-    cart_amount = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1)],
-        verbose_name='Количество ингредиентов корзине'
-    )
-
     class Meta:
         ordering = ('-id', )
         verbose_name = 'Ингредиент'
