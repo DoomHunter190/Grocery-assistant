@@ -41,7 +41,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """ Вьюсет рецептов. """
+    """ Вывод работы с рецептами """
     queryset = Recipe.objects.all()
     serializer_class = CreateRecipeSerializer
     permission_classes = (AuthorPermission, )
@@ -61,7 +61,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             shopping_list += (
                 f"\n{ingredient['ingredient__name']} "
                 f"({ingredient['ingredient__measurement_unit']}) - "
-                f"{ingredient['ingredients_cart']}")
+                f"{ingredient['amount']}")
         file = 'shopping_list.txt'
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
@@ -73,7 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(ingredients_cart=Sum('amount'))
+        ).annotate(amount=Sum('amount'))
         return self.send_message(ingredients)
 
     @action(
@@ -81,12 +81,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=('POST',),
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
-        self._add_to_list(request, pk, ShoppingCartSerializer)
-        return Response(status=status.HTTP_201_CREATED)
+        context = {'request': request}
+        recipe = get_object_or_404(Recipe, id=pk)
+        data = {
+            'user': request.user.id,
+            'recipe': recipe.id
+        }
+        serializer = ShoppingCartSerializer(data=data, context=context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @shopping_cart.mapping.delete
     def destroy_shopping_cart(self, request, pk):
-        self._remove_from_list(request, pk, ShoppingCart)
+        get_object_or_404(
+            ShoppingCart,
+            user=request.user.id,
+            recipe=get_object_or_404(Recipe, id=pk)
+        ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
@@ -94,31 +106,25 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=('POST',),
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
-        self._add_to_list(request, pk, FavoriteSerializer)
-        return Response(status=status.HTTP_201_CREATED)
-
-    @favorite.mapping.delete
-    def destroy_favorite(self, request, pk):
-        self._remove_from_list(request, pk, Favorite)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def _add_to_list(self, request, pk, serializer_class):
-        context = {'request': request}
+        context = {"request": request}
         recipe = get_object_or_404(Recipe, id=pk)
         data = {
             'user': request.user.id,
             'recipe': recipe.id
         }
-        serializer = serializer_class(data=data, context=context)
+        serializer = FavoriteSerializer(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def _remove_from_list(self, request, pk, model_class):
+    @favorite.mapping.delete
+    def destroy_favorite(self, request, pk):
         get_object_or_404(
-            model_class,
+            Favorite,
             user=request.user,
             recipe=get_object_or_404(Recipe, id=pk)
         ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserViewSet(UserViewSet):
